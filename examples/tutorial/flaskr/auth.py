@@ -57,7 +57,7 @@ def register():
         error = None
 
         if not username:
-            error = "Username is required."
+            error = "Username ."
         elif not password:
             error = "Password is required."
 
@@ -93,10 +93,8 @@ def login():
             "SELECT * FROM user WHERE username = ?", (username,)
         ).fetchone()
 
-        if user is None:
-            error = "Incorrect username."
-        elif not check_password_hash(user["password"], password):
-            error = "Incorrect password."
+        if user is None or not check_password_hash(user["password"], password):
+            error = "Usuario y contraseña incorretos."
 
         if error is None:
             # store the user id in a new session and return to the index
