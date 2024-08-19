@@ -5,15 +5,15 @@ from flaskr.db import get_db
 
 def test_index(client, auth):
     response = client.get("/")
-    assert b"Log In" in response.data
-    assert b"Register" in response.data
+    assert "Acceso" in response.data.decode()
+    assert "Registro" in response.data.decode()
 
     auth.login()
     response = client.get("/")
-    assert b"test title" in response.data
-    assert b"by test on 2018-01-01" in response.data
-    assert b"test\nbody" in response.data
-    assert b'href="/1/update"' in response.data
+    assert "test title" in response.data.decode()
+    assert "by test on 2018-01-01" in response.data.decode()
+    assert "test\nbody" in response.data.decode()
+    assert 'href="/1/update"' in response.data.decode()
 
 
 @pytest.mark.parametrize("path", ("/create", "/1/update", "/1/delete"))
@@ -34,7 +34,7 @@ def test_author_required(app, client, auth):
     assert client.post("/1/update").status_code == 403
     assert client.post("/1/delete").status_code == 403
     # current user doesn't see edit link
-    assert b'href="/1/update"' not in client.get("/").data
+    assert 'href="/1/update"' not in client.get("/").data.decode()
 
 
 @pytest.mark.parametrize("path", ("/2/update", "/2/delete"))
@@ -69,7 +69,7 @@ def test_update(client, auth, app):
 def test_create_update_validate(client, auth, path):
     auth.login()
     response = client.post(path, data={"title": "", "body": ""})
-    assert b"Title is required." in response.data
+    assert "Title is required." in response.data.decode()
 
 
 def test_delete(client, auth, app):
